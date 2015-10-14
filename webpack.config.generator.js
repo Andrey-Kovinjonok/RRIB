@@ -257,7 +257,7 @@ function getResolve(options) {
       //react: path.join(__dirname, "node_modules/react")
       //redux: path.join(__dirname, "node_modules/react")
       //react: 'src/js',
-      root: path.join(__dirname + options.folders.src)
+      root: path.join(__dirname, options.folders.src),
       store: options.folders.js + '/redux_store',
       controls: options.folders.js + '/controls',
       components: options.folders.js + '/components',

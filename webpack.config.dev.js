@@ -20,7 +20,8 @@ opt.folders.styles = opt.folders.js;
 var loaders = cfg.getLoaders(opt);
 
 module.exports = {
-  cache: true
+  cache: true,
+  devtool: 'inline-source-map',
   entry: cfg.getEntry(opt),
   output: cfg.getOutput(opt),
 
@@ -28,7 +29,7 @@ module.exports = {
 
   module: {
     loaders: [
-      loaders.babel_0,
+      loaders.babel_0_transform,
       loaders.json
     ],
     
