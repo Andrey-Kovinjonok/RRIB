@@ -16,7 +16,7 @@ function getDefaultOptions() {
   return {
     version: version,
 
-    isHotDev: true, //default
+    isHotDev: true, // default
     devHost: 'localhost',
     devPort: 3333,
 
@@ -27,12 +27,12 @@ function getDefaultOptions() {
     //
     needInject: true,
 
-    //preset folders
+    // preset folders
     files: {
       outIndex: 'index.html',
       templateHtmlDev: 'src/index_dev.html',
       templateHtml: 'src/index.html',
-      //output files
+      // output files
       bundle: 'bundle.js',
       styles: 'styles.css'
     },
@@ -46,10 +46,10 @@ function getDefaultOptions() {
       fonts: 'src/res/fonts',
       styles: 'src/res/styles'
     }
-  }
+  };
 }
 
-function getEntry(options){
+function getEntry(options) {
   var entry = [];
   if (options.isHotDev) {
     entry.push('webpack-hot-middleware/client?reload=true?http://' + options.devHost + ':' + options.devPort);
@@ -58,20 +58,19 @@ function getEntry(options){
   return entry;
 }
 
-function getOutput(options){
+function getOutput(options) {
   if (options.isHotDev) {
     return {
       path: path.join(__dirname, options.folders.output),
       publicPath: '/' + options.folders.output,
       filename: options.files.bundle
-    }
+    };
   } else {
     return {
       path: path.join(__dirname, options.folders.output),
       filename: '/js/' + options.files.bundle.split('.')[0] + '.[chunkhash].js'
     };
   }
-
 }
 
 function processPluginsOptions(options) {
@@ -111,9 +110,16 @@ function processPluginsOptions(options) {
   var defines = {};
   if (options.isHotDev) {
     defines.process = { env: { NODE_ENV: JSON.stringify('development') } };
+    defines.__CLIENT__ = false;
+    defines.__DEVELOPMENT__ = false;
   } else {
     defines.process = { env: { NODE_ENV: JSON.stringify('production') } };
   }
+
+  if (options.useReactDevTools) {
+    defines.__DEVTOOLS__ = false;
+  }
+
 
   if (options.isServerRendering)
   {
@@ -135,7 +141,6 @@ function getPlugins(options) {
 }
 
 function getLoaders(options) {
-
   return {
 
     json: {
@@ -160,7 +165,7 @@ function getLoaders(options) {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: 'file',
       include: path.join(__dirname, options.folders.fonts)
-    }, 
+    },
 
     stylus: {
       test: /\.styl$/,
@@ -189,7 +194,7 @@ function getLoaders(options) {
     },
 
     babel_2_transform: {
-      test: /\.js$/,
+      test: /\.jsx?$/,
       loader: 'babel',
       include: path.join(__dirname, options.folders.js),
       query: {
@@ -215,12 +220,13 @@ function getLoaders(options) {
     },
 
     babel_0_transform: {
-      test: /\.js$/,
+      test: /\.jsx?$/,
       loader: 'babel',
       include: path.join(__dirname, options.folders.js),
       query: {
         stage: 0,
-        //optional: ['es7.classProperties'],
+
+        // optional: ['es7.classProperties'],
         loose: 'all',
         plugins: ['react-transform'],
         extra: {
@@ -245,39 +251,40 @@ function getLoaders(options) {
       loaders: ['babel?stage=0'],
       include: path.join(__dirname, options.folders.js)
     }
-
-  }
-
+  };
 }
 
 function getResolve(options) {
-
+  console.log(__dirname);
   return {
+    root: path.resolve(__dirname),
     alias: {
-      //react: path.join(__dirname, "node_modules/react")
-      //redux: path.join(__dirname, "node_modules/react")
-      //react: 'src/js',
-      root: path.join(__dirname, options.folders.src),
-      store: options.folders.js + '/redux_store',
-      controls: options.folders.js + '/controls',
-      components: options.folders.js + '/components',
-      contaibers: options.folders.js + '/containers'
+      // react: path.join(__dirname, "node_modules/react")
+      // redux: path.join(__dirname, "node_modules/react")
+      // react: 'src/js',
+      store: path.join(options.folders.js, '/store'),
+      api: path.join(options.folders.js, '/api'),
+      controls: path.join(options.folders.js, '/controls'),
+      components: path.join(options.folders.js, '/components'),
+      containers: path.join(options.folders.js, '/containers'),
+      // styles: path.join(options.folders.js, '/styles')
     },
 
     modulesDirectories: [
       options.folders.js,
-      "node_modules",
-      "web_modules"
+      'node_modules',
+      // 'web_module'
     ],
 
-    //extensions: ['', '.json', '.js', '.jsx']
+    // extensions: ['', '.json', '.js', '.jsx']
     extensions: ['', '.json', '.js'],
-
-    /*node:    {
+    /*
+    node:    {
       __dirname: true,
       fs:        'empty'
-    }*/
-  }
+    }
+    */
+  };
 }
 
 module.exports.getDefaultOptions = getDefaultOptions;

@@ -12,6 +12,7 @@ var opt = cfg.getDefaultOptions();
 
 // we will use hot reload (HotModuleReplacementPlugin)
 opt.isHotDev = true;
+opt.useReactDevTools = true;
 opt.noInfo = false;
 opt.folders.output = 'public_dev';
 // our component's folders will contain js and styles definitions
@@ -32,8 +33,8 @@ module.exports = {
       loaders.babel_0_transform,
       loaders.json
     ],
-    
-    postcss: function () {
+
+    postcss: function() {
       return [autoprefixer({browsers: ['last 2 versions']})];
     }
   },
