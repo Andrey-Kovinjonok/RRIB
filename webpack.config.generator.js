@@ -120,7 +120,6 @@ function processPluginsOptions(options) {
     defines.__DEVTOOLS__ = false;
   }
 
-
   if (options.isServerRendering)
   {
     defines.__CLIENT__ = false;
